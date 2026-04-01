@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Users\UserController;
+use App\Http\Controllers\Veiculos\VeiculoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,6 +16,8 @@ Route::get('/user', function (Request $request) {
 // });
 
 // Retorna todos os usuários
-Route::get('/users', function () {
-    return \App\Models\User::get();
-});
+Route::get('/users', [UserController::class, 'index']);
+
+
+// Retorna todos os veiculos
+Route::get('/veiculos', [VeiculoController::class, 'index']);
