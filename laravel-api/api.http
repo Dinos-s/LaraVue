@@ -1,0 +1,27 @@
+GET http://localhost:8000/api/users?page=3
+
+###
+POST  http://localhost:8000/api/users
+Content-Type: application/json
+Accept: */*
+
+{
+    "name": "Gabriel",
+    "email": "gabriel@gmail.com",
+    "password": "12345678",
+    "password_confirmation": "12345678"
+}
+
+###
+
+GET http://localhost:8000/api/veiculos?oage=2
+
+###
+POST http://localhost:8000/api/veiculos
+Content-Type: application/json
+Accept: application/json
+
+{
+    "model": "Ferrari",
+    "year": 20265
+}
