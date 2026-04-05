@@ -103,8 +103,17 @@ class UserController extends Controller
 
     public function update(User $user, UserRequest $request): JsonResponse
     {
-
         try {
+            
+            $user = User::find($user->id);
+
+            if (!$user) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Usuário não encontrado'
+                ], 404);
+            }
+
             $user->update([
                 'name' => $request->name,
                 'email' => $request->email
@@ -131,6 +140,15 @@ class UserController extends Controller
     {
 
         try {
+            $user = User::find($user->id);
+
+            if (!$user) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Usuário não encontrado'
+                ], 404);
+            }
+
             $user->update([
                 'password' => $request->password
             ]);

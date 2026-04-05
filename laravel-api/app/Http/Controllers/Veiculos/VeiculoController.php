@@ -29,6 +29,16 @@ class VeiculoController extends Controller
 
             $veiculo = Veiculo::find($id);
 
+            if (!$veiculo) {
+
+                Log::notice("Veiculo nao encontrado", ['veiculo_id' => $id]);
+
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Veículo não encontrado'
+                ], 404);
+            }
+
             Log::info("Veículo encontrado", ['veiculo_id' => $id]);
 
             return response()->json([
@@ -65,7 +75,7 @@ class VeiculoController extends Controller
         try {
 
             $veiculo = Veiculo::create([
-               "modelo" => $request->model,
+               "model" => $request->model,
                "year" => $request->year,
             ]);
 
@@ -91,6 +101,15 @@ class VeiculoController extends Controller
 
         try {
 
+            $veiculo = Veiculo::find($veiculo->id);
+
+            if (!$veiculo) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Veículo não encontrado'
+                ], 404);
+            }
+
             $veiculo->update([
                 'model'=>$request->model,
                 'year'=>$request->year
@@ -101,15 +120,15 @@ class VeiculoController extends Controller
             return response()->json([
                 'status' => true,
                 'veiculo' => $veiculo,
-                'message' => 'Usuário editado com sucesso'
+                'message' => 'Veículo editado com sucesso'
             ], 200);
 
         } catch (\Exception $e) {
-            Log::notice("Falha ao editar um usuário",['error' => $e->getMessage()]);
+            Log::notice("Falha ao editar um Veículo",['error' => $e->getMessage()]);
 
             return response()->json([
                 'status' => false,
-                'message' => 'falha ao editar o usuário'
+                'message' => 'falha ao editar o Veículo'
             ], 400);
         }
     }
