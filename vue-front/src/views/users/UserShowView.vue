@@ -1,4 +1,6 @@
 <script setup lang="ts">
+    import AlertMessage from '@/components/AlertMessage.vue';
+import DeleteButton from '@/components/DeleteButton.vue';
     import axios from 'axios';
     import { onMounted, ref } from 'vue';
     import { useRoute } from 'vue-router';
@@ -7,7 +9,7 @@
     const user = ref<any>(null)
     const loading = ref(true)
     const errorMsg = ref('')
-    const successMsg = ref( route.query.success || '')
+    const successMsg = ref((Array.isArray(route.query.success) ? route.query.success[0] : route.query.success) || '')
 
     const loadUser = async () => {
         loading.value = true
@@ -44,18 +46,24 @@
         <RouterLink to="/users">Listagem de Usuários</RouterLink>
         <RouterLink v-if="user" :to="{ name: 'user.edit', params: { id: user.id }}">Editar</RouterLink>
         <RouterLink v-if="user" :to="{ name: 'user.edit-password', params: { id: user.id }}">Editar Senha</RouterLink>
+        <DeleteButton v-if="user"
+            :id="user.id" 
+            endpoint="http://localhost:8000/api/users" redirectAfterDelete redirectRoute="users"
+        />
 
         <div v-if="loading">
             Carregando...
         </div>
 
-        <div v-if="errorMsg" class="text-red-700">
+        <!-- <div v-if="errorMsg" class="text-red-700">
             {{ errorMsg }}
-        </div>
+        </div> -->
+        <AlertMessage :message="errorMsg" type="danger"/>
 
-        <div v-if="successMsg" class="text-green-700">
+        <!-- <div v-if="successMsg" class="text-green-700">
             {{ successMsg }}
-        </div>
+        </div> -->
+        <AlertMessage :message="successMsg" type="success" />
 
         <div v-if="user">
             <p><strong>Nome: </strong>{{ user.name }}</p>

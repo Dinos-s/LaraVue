@@ -1,5 +1,6 @@
 <script setup lang="ts">
-    import axios from 'axios';
+    import AlertMessage from '@/components/AlertMessage.vue';
+import axios from 'axios';
     import { ref, onMounted } from 'vue';
     import { useRoute } from 'vue-router';
 
@@ -7,7 +8,7 @@
     const veiculo = ref<any>(null)
     const loading = ref(true)
     const erroMsg = ref('')
-    const successMsg = ref( route.query.success || '')
+    const successMsg = ref((Array.isArray(route.query.success) ? route.query.success[0] : route.query.success) || '')
 
     const loadVeiculo = async () => {
         loading.value = true
@@ -44,13 +45,15 @@
 
         <div v-if="loading">Carregando...</div>
 
-        <div v-if="erroMsg" class="text-red-700">
+        <!-- <div v-if="erroMsg" class="text-red-700">
             {{ erroMsg }}
-        </div>
+        </div> -->
+        <AlertMessage :message="erroMsg" type="danger" />
 
-        <div v-if="successMsg" class="text-green-700">
+        <!-- <div v-if="successMsg" class="text-green-700">
             {{ successMsg }}
-        </div>
+        </div> -->
+        <AlertMessage :message="successMsg" type="success" />
 
         <div v-if="veiculo">
             <p><strong>Modelo: </strong>{{ veiculo.model }}</p>

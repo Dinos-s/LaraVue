@@ -1,11 +1,17 @@
 <script setup lang="ts">
-  import axios from 'axios';
+  import AlertMessage from '@/components/AlertMessage.vue';
+import DeleteButton from '@/components/DeleteButton.vue';
+import axios from 'axios';
   import { onMounted, ref } from 'vue';
+import { useRoute } from 'vue-router';
 
+  const route = useRoute()
   const users = ref<any[]>([])
   const loading = ref(false)
   const page = ref(1) // Current page, default to 1 for the first page
   const lastPage = ref(1)
+  const errorMsg = ref('')
+  const successMsg = ref((Array.isArray(route.query.success) ? route.query.success[0] : route.query.success) || '')
 
   const loadUsers = async () => {
     loading.value = true
@@ -48,11 +54,16 @@
   <main class="p-6">
     <h1>Listagem de Usuários</h1>
 
+    <RouterLink :to="{ name: 'user.create' }">Criar novo usuário</RouterLink>
+
     <div v-if="loading">
       Carregando...
     </div>
 
-    <div v-else>
+    <AlertMessage :message="errorMsg" type="danger" />
+    <AlertMessage :message="successMsg" type="success" />
+
+    <div v-if="!loading">
       <table>
         <thead>
           <tr>
@@ -67,8 +78,12 @@
             <td>{{ user.email }}</td>
             <td colspan="3">
               <RouterLink :to="{ name: 'user.show', params: { id: user.id }}">Visualizar</RouterLink>
-              <RouterLink :to="{ name: 'user.create' }">Criar novo usuário</RouterLink>
-              <RouterLink :to="{ name: 'user.edit', params: { id: user.id } }">Editarr</RouterLink>
+              <RouterLink :to="{ name: 'user.edit', params: { id: user.id } }">Editar</RouterLink>
+              <DeleteButton 
+              :id="user.id" 
+              endpoint="http://localhost:8000/api/users"
+              @deleted="successMsg = $event; errorMsg = '';
+              loadUsers()" @error="errorMsg = $event; successMsg = ''" />
             </td>
           </tr>
         </tbody>

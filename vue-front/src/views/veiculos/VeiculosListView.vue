@@ -68,6 +68,7 @@ import { onMounted, ref } from 'vue';
                         <td colspan="3">
                             <RouterLink :to="{ name: 'veiculo.show', params: { id: veiculo.id }}">Visualizar</RouterLink>
                             <RouterLink :to="{ name: 'veiculo.create' }">Criar novo Veiculo</RouterLink>
+                            <RouterLink :to="{ name: 'veiculo.edit', params: { id: veiculo.id }}">Editar</RouterLink>
                         </td>
                     </tr>
                 </tbody>
